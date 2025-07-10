@@ -1,3 +1,4 @@
+https://www.rust-lang.org/learn
 
 🟢 Beginner Projects (Focus: Language Basics & Ownership)
 
