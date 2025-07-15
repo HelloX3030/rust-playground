@@ -1,0 +1,28 @@
+# Ignore build output directory
+/target/
+
+# Ignore editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore debug files
+*.dSYM/
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore Rust specific files
+**/*.rs.bk
+
+# Ignore generated files from rust-analyzer
+.rust-analyzer/
