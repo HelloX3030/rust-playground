@@ -1,11 +1,23 @@
 use std::io::{self, Write};
 
-mod todo_help;
 mod base;
 mod todo_add;
+mod todo_clear;
+mod todo_done;
+mod todo_help;
+mod todo_list_done;
+mod todo_list;
+mod todo_remove;
 
 use base::*;
 use todo_add::*;
+use todo_clear::*;
+use todo_done::*;
+use todo_help::*;
+use todo_list::*;
+use todo_list_done::*;
+use todo_list::*;
+use todo_remove::*;
 
 fn main() {
     loop {
@@ -33,21 +45,26 @@ fn main() {
                 }
             }
             Some(EXIT) => break,
-            Some(LIST) => {
-                println!("Would list tasks.");
-            }
-            Some(LIST_DONE) => {
-                println!("Would list done tasks.");
-            }
+            Some(LIST) => list_tasks(),
+            Some(LIST_DONE) => list_done_tasks(),
             Some(DONE) => {
-                println!("Would mark task as done.");
-            }
-            Some(CLEAR) => {
-                println!("Would clear all tasks.");
-            }
-            Some(CLEAR_DONE) => {
-                println!("Would clear all done tasks.");
-            }
+                if args.is_empty() {
+                    println!("Usage: {DONE} <task_id>");
+                } else {
+                    match args[0].parse::<usize>() {
+                        Ok(task_id) => {
+                            if task_id == 0 {
+                                println!("Task ID must be greater than 0.");
+                            } else {
+                                mark_task_done(task_id - 1);
+                            }
+                        }
+                        Err(_) => println!("Invalid task ID: {}", args[0]),
+                    }
+                }
+            },
+            Some(CLEAR) => clear_tasks(),
+            Some(CLEAR_DONE) => clear_done_tasks(),
             Some(cmd) => println!("Unknown command: {}", cmd),
             None => continue,
         }

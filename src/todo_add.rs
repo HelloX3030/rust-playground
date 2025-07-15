@@ -1,8 +1,10 @@
+use crate::base::{TASKS, Task};
 
-use crate::base::TASKS;
-
-pub fn add_task(task: String) {
-    let mut tasks = TASKS.lock().unwrap(); // Lock mutex for mutable access
-    tasks.push(task);
+pub fn add_task(description: String) {
+    let mut tasks = TASKS.lock().unwrap();
+    tasks.push(Task {
+        description,
+        done: false,
+    });
     println!("Task added!");
 }
