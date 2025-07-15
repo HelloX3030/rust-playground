@@ -2,8 +2,10 @@ use std::io::{self, Write};
 
 mod todo_help;
 mod base;
+mod todo_add;
 
 use base::*;
+use todo_add::*;
 
 fn main() {
     loop {
@@ -27,7 +29,7 @@ fn main() {
                     println!("Usage: {ADD} <task>");
                 } else {
                     let task = args.join(" ");
-                    println!("Would add task: {}", task);
+                    add_task(task);
                 }
             }
             Some(EXIT) => break,

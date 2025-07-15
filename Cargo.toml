@@ -2,3 +2,6 @@
 name = "rust-todo-cli"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+once_cell = "1.17"   # or latest version from crates.io
