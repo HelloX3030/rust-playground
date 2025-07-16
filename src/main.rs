@@ -55,6 +55,28 @@ fn main() {
             CLEAR_NOT_DONE => {
                 todo_list.clear_not_done();
             }
+            IMPORT => {
+                if argument.is_empty() {
+                    println!("Usage: import <filename>");
+                    continue;
+                }
+                if let Err(e) = todo_list.import(argument.to_string()) {
+                    println!("Error importing tasks: {}", e);
+                } else {
+                    println!("Tasks imported successfully.");
+                }
+            }
+            EXPORT => {
+                if argument.is_empty() {
+                    println!("Usage: export <filename>");
+                    continue;
+                }
+                if let Err(e) = todo_list.export(argument.to_string()) {
+                    println!("Error exporting tasks: {}", e);
+                } else {
+                    println!("Tasks exported successfully.");
+                }
+            }
             EXIT => break,
             _ => println!("Unknown command: {}", command),
         }

@@ -1,3 +1,6 @@
+use std::error::Error;
+use std::fs::File;
+use std::io::{Write, BufWriter, BufReader, BufRead};
 
 pub const HELP: &str = "help";
 pub const ADD: &str = "add";
@@ -8,7 +11,12 @@ pub const DONE: &str = "done";
 pub const CLEAR: &str = "clear";
 pub const CLEAR_DONE: &str = "clear_done";
 pub const CLEAR_NOT_DONE: &str = "clear_not_done";
+pub const EXPORT: &str = "export";
+pub const IMPORT: &str = "import";
 pub const EXIT: &str = "exit";
+
+const TASK_DONE_EXPORT: &str = "1";
+const TASK_NOT_DONE_EXPORT: &str = "0";
 
 pub struct Task {
     pub description: String,
@@ -52,6 +60,8 @@ impl TodoList {
         println!("{} - Clear all tasks", CLEAR);
         println!("{} - Clear completed tasks", CLEAR_DONE);
         println!("{} - Clear pending tasks", CLEAR_NOT_DONE);
+        println!("{} - Import tasks from a file", IMPORT);
+        println!("{} - Export tasks to a file", EXPORT);
         println!("{} - Exit the application", EXIT);
     }
 
@@ -118,5 +128,29 @@ impl TodoList {
     pub fn clear_not_done(&mut self) {
         self.tasks.retain(|task| task.done);
         println!("All pending tasks cleared.");
+    }
+
+    pub fn import(&mut self, filename: String) -> Result<(), Box<dyn Error>> {
+        let file = File::open(filename)?;
+        let reader = BufReader::new(file);
+
+        for line in reader.lines() {
+            let line = line?;
+            println!("Line: {}", line);
+        }
+
+        Ok(())
+    }
+
+    pub fn export(&self, filename: String) -> Result<(), Box<dyn Error>> {
+        let file = File::create(filename)?;
+        let mut writer = BufWriter::new(file); // optionally buffer output
+
+        for task in &self.tasks {
+            let status = if task.done { TASK_DONE_EXPORT } else { TASK_NOT_DONE_EXPORT };
+            writeln!(writer, "{};{}", status, task.description)?;
+        }
+
+        Ok(())
     }
 }
