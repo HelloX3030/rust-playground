@@ -24,13 +24,6 @@ pub struct Task {
 }
 
 impl Task {
-    pub fn new(description: String) -> Self {
-        Task {
-            description,
-            done: false,
-        }
-    }
-
     pub fn print(&self) {
         println!("{}: {}", if self.done { "[x]" } else { "[ ]" }, self.description);
     }
@@ -136,7 +129,21 @@ impl TodoList {
 
         for line in reader.lines() {
             let line = line?;
-            println!("Line: {}", line);
+            let parts: Vec<&str> = line.split(';').collect();
+            if parts.len() != 2 {
+                return Err("Invalid line format in import file".into());
+            }
+            let status = parts[0].trim();
+            let description = parts[1].trim().to_string();
+            let done = match status {
+                TASK_DONE_EXPORT => true,
+                TASK_NOT_DONE_EXPORT => false,
+                _ => return Err("Invalid task status in import file".into()),
+            };
+            self.tasks.push(Task {
+                description,
+                done,
+            });
         }
 
         Ok(())
