@@ -1,26 +1,44 @@
-use crate::base::{TASKS, Task};
 
-pub fn list_tasks() {
-    let tasks = TASKS.lock().unwrap();
-    if tasks.is_empty() {
-        println!("No tasks found.");
-        return;
+pub const HELP: &str = "help";
+pub const ADD: &str = "add";
+pub const LIST: &str = "list";
+pub const LIST_DONE: &str = "list_done";
+pub const DONE: &str = "done";
+pub const CLEAR: &str = "clear";
+pub const CLEAR_DONE: &str = "clear_done";
+pub const EXIT: &str = "exit";
+
+pub struct Task {
+    pub description: String,
+    pub done: bool,
+}
+
+impl Task {
+    pub fn new(description: String) -> Self {
+        Task {
+            description,
+            done: false,
+        }
     }
-    println!("All tasks:");
-    for (i, task) in tasks.iter().enumerate() {
-        println!("{}: [{}] {}", i + 1, if task.done { "x" } else { " " }, task.description);
+
+    pub fn print(&self) {
+        println!("{}: {}", if self.done { "[x]" } else { "[ ]" }, self.description);
+    }
+
+    pub fn done(&mut self) {
+        self.done = true;
     }
 }
 
-pub fn list_done_tasks() {
-    let tasks = TASKS.lock().unwrap();
-    let done_tasks: Vec<_> = tasks.iter().filter(|t| t.done).collect();
-    if done_tasks.is_empty() {
-        println!("No done tasks found.");
-        return;
-    }
-    println!("Done tasks:");
-    for (i, task) in done_tasks.iter().enumerate() {
-        println!("{}: {}", i + 1, task.description);
+pub struct TodoList {
+    pub tasks: Vec<Task>,
+}
+
+impl TodoList {
+    fn add(&mut self, task: String) {
+        self.tasks.push(Task {
+            description: task,
+            done: false,
+        });
     }
 }
